@@ -14,7 +14,6 @@
             margin: 0; padding: 0; background-color: #111; display: flex; justify-content: center; align-items: center; 
             height: 100vh; overflow: hidden; font-family: 'Press Start 2P', cursive; 
             touch-action: none; user-select: none; -webkit-user-select: none; 
-            /* MOBIL BUG FIX: Uzun basınca çıkan menüleri ve sayfa yenilemeyi engeller */
             -webkit-touch-callout: none; overscroll-behavior: none; 
         }
         
@@ -26,18 +25,15 @@
             display: flex; flex-direction: column; position: relative; border: 2px solid #554800;
         }
 
-        /* EKRAN BÖLÜMÜ */
         #screen-area { height: 45%; background-color: #2b2b2b; border-radius: 15px 15px 40px 15px; margin: 15px; padding: 15px; position: relative; box-shadow: inset 4px 4px 15px rgba(0,0,0,0.9); border: 1px solid #444; }
         #screen-bezel { width: 100%; height: 100%; background-color: #0a0f0a; border-radius: 5px; position: relative; overflow: hidden; border: 3px solid #666; box-shadow: 0 0 10px #000; }
         #game-canvas { width: 100%; height: 100%; image-rendering: pixelated; display: block; }
         #three-container { width: 100%; height: 100%; position: absolute; top:0; left:0; display:none; }
         #crosshair { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: rgba(255,255,255,0.8); font-family: sans-serif; font-weight: bold; font-size: 20px; display: none; pointer-events: none; z-index: 50; text-shadow: 1px 1px 0 #000; }
 
-        /* CRT EFEKTLERI */
         .scanlines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06)); background-size: 100% 4px, 3px 100%; pointer-events: none; z-index: 10; opacity: 0.5; }
         .vignette { position: absolute; top: 0; left: 0; width: 100%; height: 100%; box-shadow: inset 0 0 40px rgba(0,0,0,0.9); pointer-events: none; z-index: 11; }
 
-        /* KONTROLLER */
         #controls-area { height: 55%; position: relative; padding: 10px; }
         .joystick-zone { width: 70px; height: 70px; background: rgba(0,0,0,0.15); border-radius: 50%; position: absolute; box-shadow: inset 2px 2px 8px rgba(0,0,0,0.4); }
         .stick { width: 34px; height: 34px; background: #222; border-radius: 50%; position: absolute; top: 18px; left: 18px; box-shadow: 2px 2px 5px rgba(0,0,0,0.6), inset -2px -2px 5px rgba(255,255,255,0.2); transition: transform 0.05s; }
@@ -55,10 +51,10 @@
         #action-buttons { position: absolute; top: 20px; right: 5px; width: 130px; height: 130px; transform: rotate(-15deg); }
         .action-btn { width: 42px; height: 42px; border-radius: 50%; position: absolute; font-size: 16px; font-family: sans-serif; font-weight: bold; color: rgba(255,255,255,0.8); display: flex; justify-content: center; align-items: center; box-shadow: 3px 5px 0px rgba(0,0,0,0.5), inset -2px -2px 6px rgba(0,0,0,0.4); text-shadow: 1px 1px 2px rgba(0,0,0,0.8); border: 2px solid #111; }
         .action-btn:active { box-shadow: 0px 1px 0px rgba(0,0,0,0.6); transform: translateY(4px); }
-        #btn-x { top: 0; left: 44px; background: #1c4599; } /* Mavi */
-        #btn-y { top: 44px; left: 0; background: #228b22; } /* Yeşil */
-        #btn-b { top: 44px; right: 0; background: #b22222; } /* Kırmızı */
-        #btn-a { bottom: 0; left: 44px; background: #d4a017; color:#222; text-shadow:none; } /* Sarı */
+        #btn-x { top: 0; left: 44px; background: #1c4599; } 
+        #btn-y { top: 44px; left: 0; background: #228b22; } 
+        #btn-b { top: 44px; right: 0; background: #b22222; } 
+        #btn-a { bottom: 0; left: 44px; background: #d4a017; color:#222; text-shadow:none; } 
 
         #system-buttons { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 20px; }
         .sys-btn-container { display: flex; flex-direction: column; align-items: center; gap: 5px; }
@@ -81,7 +77,6 @@
 <body>
 
 <div id="console-body">
-    <!-- EKRAN -->
     <div id="screen-area">
         <div id="screen-bezel">
             <canvas id="game-canvas" width="160" height="144"></canvas>
@@ -95,14 +90,12 @@
                 <div style="font-size: 7px; text-align: center; margin-top:2px; color:#5c7a5c;">(A)Sec | (Y)Zıpla | (Menü)Çık</div>
             </div>
 
-            <div id="sub-menu"></div> <!-- Zorluk seçimi vs için -->
-
+            <div id="sub-menu"></div>
             <div class="scanlines"></div>
             <div class="vignette"></div>
         </div>
     </div>
 
-    <!-- KONTROLLER -->
     <div id="controls-area">
         <div id="d-pad">
             <div class="d-btn" id="d-up"></div><div class="d-btn" id="d-down"></div>
@@ -123,18 +116,23 @@
 </div>
 
 <script>
-/** * RETRO BOY (RB-90) MOTOR ÇEKİRDEĞİ (ENGINE)
- */
+/** * RETRO BOY (RB-90) MOTOR ÇEKİRDEĞİ (ENGINE) */
 
-// --- SES SİSTEMİ (8-BIT) ---
+// --- GELİŞTİRİLMİŞ SES SİSTEMİ (WEB AUDIO API) ---
 const Audio = {
-    ctx: null,
+    ctx: null, noiseBuf: null,
     init() { 
         if(!this.ctx) { 
             const Ctx = window.AudioContext || window.webkitAudioContext; 
-            if(Ctx) this.ctx = new Ctx(); 
+            if(Ctx) {
+                this.ctx = new Ctx(); 
+                // Noise buffer oluştur (Kırılma ve patlama sesleri için)
+                const bSize = this.ctx.sampleRate * 0.5;
+                this.noiseBuf = this.ctx.createBuffer(1, bSize, this.ctx.sampleRate);
+                const output = this.noiseBuf.getChannelData(0);
+                for (let i = 0; i < bSize; i++) output[i] = Math.random() * 2 - 1;
+            }
         } 
-        // MOBIL BUG FIX: Safari/iOS için doğrudan etkileşim anında resume çağrısı
         if(this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
     },
     play(t) {
@@ -142,12 +140,34 @@ const Audio = {
         const osc = this.ctx.createOscillator(), gain = this.ctx.createGain();
         osc.connect(gain); gain.connect(this.ctx.destination);
         const n = this.ctx.currentTime;
+        
+        // Klasik Sesler
         if(t==='jump') { osc.type='square'; osc.frequency.setValueAtTime(150,n); osc.frequency.exponentialRampToValueAtTime(300,n+0.1); gain.gain.setValueAtTime(0.1,n); gain.gain.linearRampToValueAtTime(0.01,n+0.1); osc.start(n); osc.stop(n+0.1); }
         if(t==='shoot') { osc.type='sawtooth'; osc.frequency.setValueAtTime(400,n); osc.frequency.exponentialRampToValueAtTime(100,n+0.1); gain.gain.setValueAtTime(0.1,n); gain.gain.linearRampToValueAtTime(0.01,n+0.1); osc.start(n); osc.stop(n+0.1); }
         if(t==='hit') { osc.type='square'; osc.frequency.setValueAtTime(100,n); osc.frequency.exponentialRampToValueAtTime(40,n+0.15); gain.gain.setValueAtTime(0.15,n); gain.gain.linearRampToValueAtTime(0.01,n+0.15); osc.start(n); osc.stop(n+0.15); }
         if(t==='coin') { osc.type='sine'; osc.frequency.setValueAtTime(987,n); osc.frequency.setValueAtTime(1318,n+0.08); gain.gain.setValueAtTime(0.1,n); gain.gain.linearRampToValueAtTime(0,n+0.15); osc.start(n); osc.stop(n+0.15); }
-        if(t==='break') { osc.type='triangle'; osc.frequency.setValueAtTime(80,n); osc.frequency.exponentialRampToValueAtTime(20,n+0.1); gain.gain.setValueAtTime(0.2,n); gain.gain.linearRampToValueAtTime(0.01,n+0.1); osc.start(n); osc.stop(n+0.1); }
         if(t==='place') { osc.type='sine'; osc.frequency.setValueAtTime(200,n); osc.frequency.linearRampToValueAtTime(250,n+0.05); gain.gain.setValueAtTime(0.1,n); gain.gain.linearRampToValueAtTime(0.01,n+0.05); osc.start(n); osc.stop(n+0.05); }
+        
+        // Yeni Sesler (Menü, Ölüm, Ayak Sesi, Hayvanlar)
+        if(t==='die') { osc.type='sawtooth'; osc.frequency.setValueAtTime(200,n); osc.frequency.exponentialRampToValueAtTime(10,n+0.6); gain.gain.setValueAtTime(0.2,n); gain.gain.linearRampToValueAtTime(0.01,n+0.6); osc.start(n); osc.stop(n+0.6); }
+        if(t==='menu_move') { osc.type='square'; osc.frequency.setValueAtTime(400,n); gain.gain.setValueAtTime(0.05,n); gain.gain.linearRampToValueAtTime(0.01,n+0.05); osc.start(n); osc.stop(n+0.05); }
+        
+        // Hayvan Sesleri
+        if(t==='pig') { osc.type='sawtooth'; osc.frequency.setValueAtTime(80,n); osc.frequency.linearRampToValueAtTime(50,n+0.3); gain.gain.setValueAtTime(0.1,n); gain.gain.linearRampToValueAtTime(0.01,n+0.3); osc.start(n); osc.stop(n+0.3); }
+        if(t==='cow') { osc.type='square'; osc.frequency.setValueAtTime(60,n); osc.frequency.linearRampToValueAtTime(40,n+0.6); gain.gain.setValueAtTime(0.1,n); gain.gain.linearRampToValueAtTime(0.01,n+0.6); osc.start(n); osc.stop(n+0.6); }
+        if(t==='sheep') { osc.type='sine'; osc.frequency.setValueAtTime(300,n); osc.frequency.linearRampToValueAtTime(250,n+0.4); gain.gain.setValueAtTime(0.1,n); gain.gain.linearRampToValueAtTime(0.01,n+0.4); osc.start(n); osc.stop(n+0.4); }
+        if(t==='chicken') { osc.type='triangle'; osc.frequency.setValueAtTime(600,n); osc.frequency.linearRampToValueAtTime(800,n+0.1); gain.gain.setValueAtTime(0.05,n); gain.gain.linearRampToValueAtTime(0.01,n+0.1); osc.start(n); osc.stop(n+0.1); }
+
+        // Gürültü/Filtre Tabanlı Sesler (Kırılma, Ayak Sesi)
+        if(t==='break' || t==='step') {
+            const ns = this.ctx.createBufferSource(); ns.buffer = this.noiseBuf;
+            const bq = this.ctx.createBiquadFilter();
+            bq.type = t==='step' ? 'lowpass' : 'bandpass'; bq.frequency.value = t==='step' ? 300 : 800;
+            ns.connect(bq); bq.connect(gain);
+            let vol = t==='step' ? 0.03 : 0.2; let dur = t==='step' ? 0.05 : 0.15;
+            gain.gain.setValueAtTime(vol, n); gain.gain.exponentialRampToValueAtTime(0.01, n+dur);
+            ns.start(n); ns.stop(n+dur);
+        }
     }
 };
 
@@ -162,7 +182,6 @@ const Input = {
             const p = (e) => { e.preventDefault(); if(!this.keys[k]){ this.keys[k]=1; this.vib(); } };
             const r = (e) => { e.preventDefault(); this.keys[k]=0; };
             el.addEventListener('touchstart',p,{passive:false}); el.addEventListener('mousedown',p);
-            // MOBIL BUG FIX: touchcancel eklenerek parmak kayınca tuşların takılı kalması engellendi.
             el.addEventListener('touchend',r); el.addEventListener('mouseup',r); el.addEventListener('mouseleave',r); el.addEventListener('touchcancel',r); 
         };
         bind('d-up','up'); bind('d-down','down'); bind('d-left','left'); bind('d-right','right');
@@ -171,7 +190,7 @@ const Input = {
         
         const setJoy = (zid, sid, tj) => {
             const z=document.getElementById(zid), s=document.getElementById(sid);
-            let act=false, r=35, tid=null; // tid: MOBIL BUG FIX (Multi-touch id takibi)
+            let act=false, r=35, tid=null; 
             const move=(e)=>{
                 if(!act)return; e.preventDefault();
                 let t = e;
@@ -180,7 +199,7 @@ const Input = {
                     for(let i=0; i<e.changedTouches.length; i++) {
                         if(e.changedTouches[i].identifier === tid) { t = e.changedTouches[i]; found = true; break; }
                     }
-                    if(!found && e.type !== 'mousemove') return; // Başka parmak ekrandaysa yoksay
+                    if(!found && e.type !== 'mousemove') return; 
                 }
                 let rect = z.getBoundingClientRect();
                 let tx = t.clientX - rect.left - r, ty = t.clientY - rect.top - r;
@@ -190,7 +209,7 @@ const Input = {
             };
             const start=(e)=>{ 
                 if(act) return; act=true; 
-                if(e.changedTouches) tid = e.changedTouches[0].identifier; // Hangi parmakla dokunulduğunu kaydet
+                if(e.changedTouches) tid = e.changedTouches[0].identifier; 
                 move(e); this.vib(); 
             };
             const end=(e)=>{ 
@@ -199,12 +218,11 @@ const Input = {
                     for(let i=0; i<e.changedTouches.length; i++) {
                         if(e.changedTouches[i].identifier === tid) matched = true;
                     }
-                    if(!matched) return; // Bizim parmağımız çekilmediyse devam et
+                    if(!matched) return; 
                 }
                 act=false; tid=null; s.style.transform=`translate(0px, 0px)`; tj.x=0; tj.y=0; 
             };
             z.addEventListener('touchstart',start,{passive:false}); z.addEventListener('touchmove',move,{passive:false});
-            // MOBIL BUG FIX: touchcancel eklendi
             z.addEventListener('touchend',end); z.addEventListener('touchcancel',end); z.addEventListener('mousedown',start);
             window.addEventListener('mousemove',move); window.addEventListener('mouseup',end);
         };
@@ -258,7 +276,18 @@ const Engine = {
         if(this.active && this.active.kill) this.active.kill();
         this.active=null; this.tc.style.display='none'; this.c.style.display='block';
         this.ch.style.display='none'; this.hud.style.display='none'; this.sm.style.display='none';
-        this.subMode=false; this.drawMenu();
+        this.subMode=false; 
+        
+        // EKRAN TEMİZLEME BUG FIX: Menüye dönüldüğünde arka planda kalan şeffaf eski görüntüyü temizler.
+        this.ctx.clearRect(0, 0, this.c.width, this.c.height);
+
+        // MOBİL BUG FIX: Menüye dönünce kilitlenmeyi engellemek için tüm girdileri sıfırla
+        for(let k in Input.keys) Input.keys[k] = 0;
+        Input.joyL.x = 0; Input.joyL.y = 0; Input.joyR.x = 0; Input.joyR.y = 0;
+        
+        // Cooldown ekle ki hemen başka menüye atlamasın
+        this.mCool = 0.5;
+        this.drawMenu();
     },
     load(idx, args) {
         this.mu.style.display='none'; this.sm.style.display='none'; this.subMode=false;
@@ -268,19 +297,19 @@ const Engine = {
     },
     loop(t) {
         let dt = (t - this.lastT)/1000; this.lastT = t;
-        if(dt>0.1) dt=0.1; // Limit lag spike
+        if(dt>0.1) dt=0.1;
 
         if(!this.active) {
             if(this.mCool>0) this.mCool-=dt;
             else {
                 if(this.subMode) {
-                    if(Input.keys.down) { this.subIdx=(this.subIdx+1)%this.subOpts.length; this.renderSub(this.sm.children[0].innerText); this.mCool=0.2; Audio.play('hit');}
-                    if(Input.keys.up) { this.subIdx=(this.subIdx-1+this.subOpts.length)%this.subOpts.length; this.renderSub(this.sm.children[0].innerText); this.mCool=0.2; Audio.play('hit');}
-                    if(Input.keys.a) { this.mCool=0.3; this.subCb(this.subIdx); }
+                    if(Input.keys.down) { this.subIdx=(this.subIdx+1)%this.subOpts.length; this.renderSub(this.sm.children[0].innerText); this.mCool=0.2; Audio.play('menu_move');}
+                    if(Input.keys.up) { this.subIdx=(this.subIdx-1+this.subOpts.length)%this.subOpts.length; this.renderSub(this.sm.children[0].innerText); this.mCool=0.2; Audio.play('menu_move');}
+                    if(Input.keys.a) { this.mCool=0.3; Audio.play('coin'); this.subCb(this.subIdx); }
                     if(Input.keys.b) { this.mCool=0.3; this.subMode=false; this.sm.style.display='none'; }
                 } else {
-                    if(Input.keys.down) { this.mIdx=(this.mIdx+1)%this.games.length; this.drawMenu(); this.mCool=0.15; Audio.play('hit');}
-                    if(Input.keys.up) { this.mIdx=(this.mIdx-1+this.games.length)%this.games.length; this.drawMenu(); this.mCool=0.15; Audio.play('hit');}
+                    if(Input.keys.down) { this.mIdx=(this.mIdx+1)%this.games.length; this.drawMenu(); this.mCool=0.15; Audio.play('menu_move');}
+                    if(Input.keys.up) { this.mIdx=(this.mIdx-1+this.games.length)%this.games.length; this.drawMenu(); this.mCool=0.15; Audio.play('menu_move');}
                     if(Input.keys.a) { 
                         Audio.init(); this.mCool=0.3;
                         if(this.mIdx===2) { this.showSub("ZORLUK SEC", ["KOLAY", "ORTA", "ZOR (YENILMEZ)"], (res)=>this.load(2, res)); }
@@ -290,7 +319,14 @@ const Engine = {
             }
         } else {
             if(Input.keys.menu) { this.openMenu(); Input.keys.menu=0; }
-            else { this.active.upd(dt); if(this.active.rnd) this.active.rnd(this.ctx); }
+            else { 
+                this.active.upd(dt); 
+                // CRASH BUG FIX: Eğer upd() fonksiyonu oyuncuyu öldürüp açık menüye atarsa (this.active = null olursa),
+                // draw (rnd) fonksiyonunun boş objede çalışmaya çalışıp döngüyü dondurmasını engeller.
+                if(this.active && this.active.rnd) {
+                    this.active.rnd(this.ctx); 
+                }
+            }
         }
         requestAnimationFrame(t=>this.loop(t));
     }
@@ -298,7 +334,7 @@ const Engine = {
 
 /**
  * ============================================================================
- * 1. MINE-CRAFT 2010 (3D Voxel, Procedural Textures, Animals, Raycast, Water)
+ * 1. MINE-CRAFT 2010 (Geliştirilmiş Doku, Çarpışma ve Yeni Hayvanlar)
  * ============================================================================
  */
 class G_Minecraft {
@@ -322,37 +358,46 @@ class G_Minecraft {
             3: new THREE.MeshLambertMaterial({map: this.tex.stone}), // Taş
             4: new THREE.MeshLambertMaterial({map: this.tex.wood}),  // Odun
             5: new THREE.MeshLambertMaterial({map: this.tex.leaf, transparent:true, opacity:0.9}), // Yaprak
-            6: new THREE.MeshLambertMaterial({color: 0x44aaff, transparent:true, opacity:0.6}) // Su
+            6: new THREE.MeshLambertMaterial({color: 0x44aaff, transparent:true, opacity:0.6}), // Su
+            7: new THREE.MeshLambertMaterial({map: this.tex.sand}),  // Yeni: Kum
+            8: new THREE.MeshLambertMaterial({map: this.tex.planks}),// Yeni: Tahta
+            9: new THREE.MeshLambertMaterial({map: this.tex.glass, transparent:true, opacity:0.7}), // Yeni: Cam
+            10: new THREE.MeshLambertMaterial({map: this.tex.brick}) // Yeni: Tuğla
         };
-        this.bNames = ["", "Cimen", "Toprak", "Tas", "Odun", "Yaprak", "Su"];
+        this.bNames = ["", "Cimen", "Toprak", "Tas", "Odun", "Yaprak", "Su", "Kum", "Tahta", "Cam", "Tugla"];
 
         this.cs = 16; this.chunks = {}; this.geom = new THREE.BoxGeometry(1,1,1);
         this.p = { x:8, y:20, z:8, yaw:0, pitch:0, vy:0, og:false };
+        
+        // Yeni Hayvan Tipleri (Koyun, İnek, Domuz, Tavuk)
         this.mobs = []; this.spawnMobs();
         
-        this.rc = new THREE.Raycaster(); this.cv = new THREE.Vector2(0,0);
-        this.cd = 0; this.sel = 1;
+        this.rc = new THREE.Raycaster(); this.rcDown = new THREE.Raycaster(); this.cv = new THREE.Vector2(0,0);
+        this.cd = 0; this.sel = 1; this.stepT = 0;
         
         this.updateHud();
     }
     
-    // İşlemsel (Procedural) Pixel Art Dokular
     genTex() {
         const mk = (bc, nc, type) => {
             let c=document.createElement('canvas'); c.width=16; c.height=16; let x=c.getContext('2d');
             x.fillStyle=bc; x.fillRect(0,0,16,16);
             for(let i=0;i<80;i++){ x.fillStyle=nc; x.fillRect(Math.random()*16, Math.random()*16, 1, 1); }
-            if(type==='grass'){ x.fillStyle='#3a8c23'; x.fillRect(0,0,16,4); } // Çimen üstü
-            if(type==='wood'){ x.fillStyle='#301d0c'; x.fillRect(3,0,2,16); x.fillRect(11,0,2,16); } // Ağaç çizgisi
+            if(type==='grass'){ x.fillStyle='#3a8c23'; x.fillRect(0,0,16,4); } 
+            if(type==='wood'){ x.fillStyle='#301d0c'; x.fillRect(3,0,2,16); x.fillRect(11,0,2,16); } 
+            if(type==='planks'){ x.fillStyle='#3b2611'; for(let i=0;i<16;i+=4) x.fillRect(0,i,16,1); x.fillRect(4,0,1,8); x.fillRect(10,8,1,8); }
+            if(type==='glass'){ x.fillStyle='rgba(255,255,255,0.8)'; x.fillRect(0,0,16,2); x.fillRect(0,0,2,16); x.fillRect(14,0,2,16); x.fillRect(0,14,16,2); x.fillRect(2,12,4,2); }
+            if(type==='brick'){ x.fillStyle='#ccc'; for(let i=3;i<16;i+=4) x.fillRect(0,i,16,1); for(let i=0;i<16;i+=8) { x.fillRect(i+4,0,1,3); x.fillRect(i,4,1,3); x.fillRect(i+4,8,1,3); x.fillRect(i,12,1,3); } }
             let t = new THREE.CanvasTexture(c); t.magFilter=t.minFilter=THREE.NearestFilter; return t;
         };
         return {
             grass: mk('#7a5431','#5e3e21','grass'), dirt: mk('#7a5431','#5e3e21','dirt'),
-            stone: mk('#888','#555','stone'), wood: mk('#5c3a21','#422815','wood'), leaf: mk('#226611','#114400','leaf')
+            stone: mk('#888','#555','stone'), wood: mk('#5c3a21','#422815','wood'), leaf: mk('#226611','#114400','leaf'),
+            sand: mk('#e3cf9a', '#c2ad74', 'sand'), planks: mk('#734c24', '#593817', 'planks'), 
+            glass: mk('#88ccff', '#aaddff', 'glass'), brick: mk('#a33b3b', '#7a2929', 'brick')
         };
     }
     
-    // Basit Perlin benzeri Noise
     noise(x,z) {
         let n = Math.sin(x*0.1)*Math.cos(z*0.1)*5;
         n += Math.sin(x*0.05 + z*0.05)*3;
@@ -371,19 +416,20 @@ class G_Minecraft {
                 let isW = h<8; let mh = isW?8:h;
                 
                 for(let y=1; y<=mh; y++) {
-                    let t = 3; // Taş
-                    if(isW && y===8) t=6; // Su yüzeyi
-                    else if(!isW) { if(y===h) t=1; else if(y>h-3) t=2; }
+                    let t = 3; 
+                    if(isW && y===8) t=6; 
+                    else if(!isW) { 
+                        if(y===h) t = (h<=9 && Math.random()>0.2) ? 7 : 1; // Sahillere Kum (7)
+                        else if(y>h-3) t=2; 
+                    }
                     
-                    // Sadece üst yüzeyi çiz (Basit culling)
                     if(y===mh || (isW && y===mh-1)) {
                         let m = new THREE.Mesh(this.geom, this.mats[t]);
                         m.position.set(wx,y,wz); grp.add(m);
                     }
                 }
                 
-                // Ağaç (%2 ihtimal, çimenin üstüne)
-                if(!isW && Math.random()<0.02 && wx>sx && wx<sx+this.cs-1 && wz>sz && wz<sz+this.cs-1) {
+                if(!isW && h>9 && Math.random()<0.02 && wx>sx && wx<sx+this.cs-1 && wz>sz && wz<sz+this.cs-1) {
                     for(let ty=1; ty<=4; ty++){ let wm=new THREE.Mesh(this.geom,this.mats[4]); wm.position.set(wx,h+ty,wz); grp.add(wm); }
                     for(let lx=-1; lx<=1; lx++) for(let lz=-1; lz<=1; lz++) {
                         let lm=new THREE.Mesh(this.geom,this.mats[5]); lm.position.set(wx+lx,h+4,wz+lz); grp.add(lm);
@@ -407,68 +453,107 @@ class G_Minecraft {
     }
 
     spawnMobs() {
-        for(let i=0; i<3; i++) {
-            let c = [0xffffff, 0x444444, 0xffaadd][i]; // Koyun, Inek, Domuz renkleri
-            let m = new THREE.Mesh(new THREE.BoxGeometry(0.8,0.8,0.8), new THREE.MeshLambertMaterial({color:c}));
-            m.position.set(8 + Math.random()*10, 20, 8 + Math.random()*10);
-            this.sc.add(m); this.mobs.push({m, vy:0, tx:0, tz:0});
+        const types = [
+            {t:'sheep', c:0xffffff, s:0.8, snd:'sheep'},
+            {t:'cow', c:0x5c4033, s:1.0, snd:'cow'},
+            {t:'pig', c:0xffaadd, s:0.7, snd:'pig'},
+            {t:'chicken', c:0xffffaa, s:0.4, snd:'chicken'}
+        ];
+        for(let i=0; i<4; i++) {
+            let tp = types[i];
+            let m = new THREE.Mesh(new THREE.BoxGeometry(tp.s,tp.s,tp.s), new THREE.MeshLambertMaterial({color:tp.c}));
+            m.position.set(8 + Math.random()*15, 20, 8 + Math.random()*15);
+            this.sc.add(m); this.mobs.push({m, vy:0, tx:0, tz:0, snd:tp.snd, cd: Math.random()*5});
         }
     }
 
     updateHud() { this.e.hud.innerText = `MC | (A)Koy (B)Kir (X):${this.bNames[this.sel]}`; }
 
     upd(dt) {
-        // Kamera (Sağ Joy)
         this.p.yaw -= Input.joyR.x * 2.5 * dt;
         this.p.pitch -= Input.joyR.y * 2.5 * dt;
         this.p.pitch = Math.max(-Math.PI/2, Math.min(Math.PI/2, this.p.pitch));
         this.cam.rotation.set(this.p.pitch, this.p.yaw, 0, 'YXZ');
 
-        // Hareket (Sol Joy)
         let dir = new THREE.Vector3(); this.cam.getWorldDirection(dir); dir.y=0; dir.normalize();
         let rig = new THREE.Vector3().crossVectors(dir, new THREE.Vector3(0,1,0)).normalize();
         let spd = 6 * dt;
-        this.p.x += (dir.x * -Input.joyL.y + rig.x * Input.joyL.x) * spd;
-        this.p.z += (dir.z * -Input.joyL.y + rig.z * Input.joyL.x) * spd;
+        let mvX = (dir.x * -Input.joyL.y + rig.x * Input.joyL.x) * spd;
+        let mvZ = (dir.z * -Input.joyL.y + rig.z * Input.joyL.x) * spd;
+        this.p.x += mvX; this.p.z += mvZ;
 
-        // Yerçekimi & Zemin Kontrolü
+        // Ayak Sesleri
+        if(this.p.og && (Math.abs(mvX)>0 || Math.abs(mvZ)>0)) {
+            this.stepT -= dt; if(this.stepT<=0){ Audio.play('step'); this.stepT=0.35; }
+        }
+
+        // Yerçekimi ve Doğru Zemin Algılama (Raycaster kullanarak)
         this.p.vy -= 18 * dt; this.p.y += this.p.vy * dt;
-        let gh = this.noise(this.p.x, this.p.z) + 1.6; // Göz hizası
-        if(this.p.y <= gh) { this.p.y=gh; this.p.vy=0; this.p.og=true; } else { this.p.og=false; }
         
-        // Zıplama (Y Tuşu)
+        let allChunks = []; for(let k in this.chunks) allChunks.push(this.chunks[k]);
+        this.rcDown.set(new THREE.Vector3(this.p.x, this.p.y+0.1, this.p.z), new THREE.Vector3(0,-1,0));
+        let gHits = this.rcDown.intersectObjects(allChunks, true);
+        
+        if(gHits.length > 0 && gHits[0].distance < 1.7 && this.p.vy <= 0) {
+            this.p.y = gHits[0].point.y + 1.6; // Göz hizası sabitlemesi
+            this.p.vy = 0; this.p.og = true;
+        } else {
+            this.p.og = false;
+        }
+        
         if(Input.keys.y && this.p.og) { this.p.vy=6; Audio.play('jump'); Input.keys.y=0; }
-        
         this.cam.position.set(this.p.x, this.p.y, this.p.z);
 
-        // Aksiyon (Kırma/Koyma/Seçme)
+        // Aksiyon (Blok Seçimi)
         if(this.cd>0) this.cd-=dt;
-        if(Input.keys.x && this.cd<=0) { this.sel=(this.sel%5)+1; this.updateHud(); this.cd=0.3; } // Suyu seçtirmiyoruz
+        if(Input.keys.x && this.cd<=0) { 
+            this.sel++; if(this.sel===6) this.sel=7; // Suyu geç
+            if(this.sel>10) this.sel=1; 
+            this.updateHud(); this.cd=0.3; Audio.play('menu_move');
+        }
 
+        // Blok Koyma ve Kırma
         if((Input.keys.a || Input.keys.b) && this.cd<=0) {
             this.rc.setFromCamera(this.cv, this.cam);
-            let meshes = []; for(let k in this.chunks) meshes.push(...this.chunks[k].children);
-            let ints = this.rc.intersectObjects(meshes);
-            if(ints.length > 0 && ints[0].distance < 6) { // Erişim mesafesi
+            let ints = this.rc.intersectObjects(allChunks, true);
+            if(ints.length > 0 && ints[0].distance < 6) {
                 let hit = ints[0];
                 if(Input.keys.b && hit.object.material !== this.mats[6]) { // Su kırılamaz
                     hit.object.parent.remove(hit.object); Audio.play('break');
                 } else if(Input.keys.a) {
                     let np = hit.object.position.clone().add(hit.face.normal);
-                    let nb = new THREE.Mesh(this.geom, this.mats[this.sel]); nb.position.copy(np);
-                    hit.object.parent.add(nb); Audio.play('place');
+                    // BUG FIX: Blok karakterin üstüne konamaz!
+                    let dToP = Math.hypot(np.x - this.p.x, np.z - this.p.z);
+                    if(dToP > 0.8 || Math.abs(np.y - this.p.y) > 1.5) {
+                        let nb = new THREE.Mesh(this.geom, this.mats[this.sel]); nb.position.copy(np);
+                        hit.object.parent.add(nb); Audio.play('place');
+                    }
                 }
             }
             this.cd = 0.3;
         }
 
-        // Hayvanlar
+        // Hayvanlar (Zıplama, Yürüme ve Ses)
         this.mobs.forEach(mb => {
             mb.vy -= 15*dt; mb.m.position.y += mb.vy*dt;
-            let mgh = this.noise(mb.m.position.x, mb.m.position.z) + 1;
-            if(mb.m.position.y <= mgh) { mb.m.position.y=mgh; mb.vy=0; if(Math.random()<0.02) mb.vy=5; }
+            
+            // Hayvan zemin kontrolü
+            this.rcDown.set(new THREE.Vector3(mb.m.position.x, mb.m.position.y+0.1, mb.m.position.z), new THREE.Vector3(0,-1,0));
+            let mHits = this.rcDown.intersectObjects(allChunks, true);
+            if(mHits.length > 0 && mHits[0].distance < (mb.m.geometry.parameters.height/2 + 0.1) && mb.vy <= 0) {
+                mb.m.position.y = mHits[0].point.y + mb.m.geometry.parameters.height/2;
+                mb.vy = 0; if(Math.random()<0.02) mb.vy=5; // Zıpla
+            }
+            
             if(Math.random()<0.05) { mb.tx=(Math.random()-0.5)*3; mb.tz=(Math.random()-0.5)*3; }
             mb.m.position.x += mb.tx*dt; mb.m.position.z += mb.tz*dt;
+
+            // Hayvan Sesleri
+            mb.cd -= dt;
+            if(mb.cd <= 0) {
+                let dToP = Math.hypot(this.p.x - mb.m.position.x, this.p.z - mb.m.position.z);
+                if(dToP < 12) { Audio.play(mb.snd); mb.cd = 3 + Math.random()*5; }
+            }
         });
 
         this.mngChunks();
@@ -477,46 +562,25 @@ class G_Minecraft {
     kill() { this.rn.dispose(); }
 }
 
-/**
- * ============================================================================
- * 2. CHRONO QUEST (Tam Kapsamlı RPG)
- * ============================================================================
- */
+/** 2. CHRONO QUEST (Tam Kapsamlı RPG) */
 class G_RPG {
-    constructor(eng) {
-        this.e=eng; this.w=160; this.h=144;
-        this.p = {x:80, y:72, hp:100, max:100};
-        this.ens = []; this.buls = []; this.drops = [];
-        this.sc=0; this.spT=0; this.fcd=0;
-        this.e.hud.style.display='block';
-    }
+    constructor(eng) { this.e=eng; this.w=160; this.h=144; this.p = {x:80, y:72, hp:100, max:100}; this.ens = []; this.buls = []; this.drops = []; this.sc=0; this.spT=0; this.fcd=0; this.e.hud.style.display='block'; }
     upd(dt) {
-        // Player Hareket (Sol Joy veya D-pad)
-        let vx = (Input.keys.right-Input.keys.left) || Input.joyL.x;
-        let vy = (Input.keys.down-Input.keys.up) || Input.joyL.y;
+        let vx = (Input.keys.right-Input.keys.left) || Input.joyL.x; let vy = (Input.keys.down-Input.keys.up) || Input.joyL.y;
         this.p.x += vx*60*dt; this.p.y += vy*60*dt;
         this.p.x=Math.max(5,Math.min(this.w-5,this.p.x)); this.p.y=Math.max(5,Math.min(this.h-5,this.p.y));
-
-        // Atış (Sağ Joy veya ABXY)
         let ax = Input.joyR.x, ay = Input.joyR.y;
         if(Input.keys.a) ay=1; else if(Input.keys.y) ay=-1; else if(Input.keys.x) ax=-1; else if(Input.keys.b) ax=1;
         if(this.fcd>0) this.fcd-=dt;
         if((Math.abs(ax)>0.2 || Math.abs(ay)>0.2) && this.fcd<=0) {
-            let l = Math.sqrt(ax*ax+ay*ay);
-            this.buls.push({x:this.p.x, y:this.p.y, vx:(ax/l)*150, vy:(ay/l)*150, isP:true});
-            this.fcd=0.25; Audio.play('shoot');
+            let l = Math.sqrt(ax*ax+ay*ay); this.buls.push({x:this.p.x, y:this.p.y, vx:(ax/l)*150, vy:(ay/l)*150, isP:true}); this.fcd=0.25; Audio.play('shoot');
         }
-
-        // Spawn
         this.spT-=dt;
         if(this.spT<=0) {
             let ex = Math.random()<0.5 ? -10 : this.w+10, ey = Math.random()*this.h;
-            let type = Math.random()>0.7 ? 1 : 0; // 0: Melee, 1: Ranged
-            this.ens.push({x:ex, y:ey, hp:30, max:30, spd: 20+Math.random()*15, type:type, sT:1});
+            this.ens.push({x:ex, y:ey, hp:30, max:30, spd: 20+Math.random()*15, type: Math.random()>0.7 ? 1 : 0, sT:1});
             this.spT = Math.max(0.5, 2 - (this.sc/20));
         }
-
-        // Mermiler
         for(let i=this.buls.length-1; i>=0; i--) {
             let b=this.buls[i]; b.x+=b.vx*dt; b.y+=b.vy*dt;
             if(b.x<0||b.x>this.w||b.y<0||b.y>this.h) { this.buls.splice(i,1); continue; }
@@ -526,123 +590,61 @@ class G_RPG {
                     if(Math.hypot(b.x-e.x, b.y-e.y)<8) {
                         e.hp-=15; this.buls.splice(i,1); Audio.play('hit');
                         if(e.hp<=0) {
-                            if(Math.random()<0.4) this.drops.push({x:e.x,y:e.y}); // %40 can düşür
+                            if(Math.random()<0.4) this.drops.push({x:e.x,y:e.y}); 
                             this.ens.splice(j,1); this.sc++;
-                        }
-                        break;
+                        } break;
                     }
                 }
-            } else {
-                if(Math.hypot(b.x-this.p.x, b.y-this.p.y)<6) { this.p.hp-=10; this.buls.splice(i,1); Audio.play('hit'); }
-            }
+            } else { if(Math.hypot(b.x-this.p.x, b.y-this.p.y)<6) { this.p.hp-=10; this.buls.splice(i,1); Audio.play('hit'); } }
         }
-
-        // Düşmanlar
         this.ens.forEach(e => {
             let dx=this.p.x-e.x, dy=this.p.y-e.y, dist=Math.hypot(dx,dy);
             if(dist>1) { e.x+=(dx/dist)*e.spd*dt; e.y+=(dy/dist)*e.spd*dt; }
-            if(e.type===1) {
-                e.sT-=dt; if(e.sT<=0 && dist<90) { this.buls.push({x:e.x,y:e.y,vx:(dx/dist)*80,vy:(dy/dist)*80,isP:false}); e.sT=2; }
-            }
-            if(dist<8) this.p.hp -= 20*dt; // Melee damage
+            if(e.type===1) { e.sT-=dt; if(e.sT<=0 && dist<90) { this.buls.push({x:e.x,y:e.y,vx:(dx/dist)*80,vy:(dy/dist)*80,isP:false}); e.sT=2; } }
+            if(dist<8) this.p.hp -= 20*dt; 
         });
-
-        // Eşyalar
         for(let i=this.drops.length-1; i>=0; i--) {
-            if(Math.hypot(this.drops[i].x-this.p.x, this.drops[i].y-this.p.y)<10) {
-                this.p.hp = Math.min(this.p.max, this.p.hp+20); Audio.play('coin'); this.drops.splice(i,1);
-            }
+            if(Math.hypot(this.drops[i].x-this.p.x, this.drops[i].y-this.p.y)<10) { this.p.hp = Math.min(this.p.max, this.p.hp+20); Audio.play('coin'); this.drops.splice(i,1); }
         }
-
-        if(this.p.hp<=0) this.e.openMenu();
+        if(this.p.hp<=0) { Audio.play('die'); return this.e.openMenu(); }
         this.e.hud.innerText = `RPG | HP:${Math.floor(this.p.hp)} | SKOR:${this.sc}`;
     }
     rnd(x) {
-        x.fillStyle='#1e3d23'; x.fillRect(0,0,this.w,this.h); // Zemin
-        x.fillStyle='#264a2c'; for(let i=0;i<40;i++) x.fillRect((i*41)%this.w, (i*27)%this.h, 6,6); // Zemin detayı
-        
-        this.drops.forEach(d => { x.fillStyle='#f05'; x.fillRect(d.x-3,d.y-3,6,6); }); // Kalp
-        
-        this.ens.forEach(e => {
-            x.fillStyle = e.type===1 ? '#a32828' : '#8f561d'; x.fillRect(e.x-4,e.y-4,8,8);
-            x.fillStyle = 'red'; x.fillRect(e.x-4,e.y-8,8,2);
-            x.fillStyle = '#0f0'; x.fillRect(e.x-4,e.y-8,8*(e.hp/e.max),2);
-        });
-        
-        x.fillStyle='#2852a3'; x.fillRect(this.p.x-5,this.p.y-5,10,10); // Player
-        
+        x.fillStyle='#1e3d23'; x.fillRect(0,0,this.w,this.h); x.fillStyle='#264a2c'; for(let i=0;i<40;i++) x.fillRect((i*41)%this.w, (i*27)%this.h, 6,6); 
+        this.drops.forEach(d => { x.fillStyle='#f05'; x.fillRect(d.x-3,d.y-3,6,6); }); 
+        this.ens.forEach(e => { x.fillStyle = e.type===1 ? '#a32828' : '#8f561d'; x.fillRect(e.x-4,e.y-4,8,8); x.fillStyle = 'red'; x.fillRect(e.x-4,e.y-8,8,2); x.fillStyle = '#0f0'; x.fillRect(e.x-4,e.y-8,8*(e.hp/e.max),2); });
+        x.fillStyle='#2852a3'; x.fillRect(this.p.x-5,this.p.y-5,10,10); 
         this.buls.forEach(b => { x.fillStyle=b.isP?'#ffcc00':'#ff0044'; x.fillRect(b.x-1.5,b.y-1.5,3,3); });
     }
 }
 
-/**
- * ============================================================================
- * 3. XOX (Seviyeli Yapay Zeka)
- * ============================================================================
- */
+/** 3. XOX (Seviyeli Yapay Zeka) */
 class G_XOX {
-    constructor(eng, diff) {
-        this.e=eng; this.d = diff || 0; // 0:Kolay, 1:Orta, 2:Zor
-        this.b = [0,0,0, 0,0,0, 0,0,0]; this.c=0; this.t=1; this.go=false;
-        this.e.hud.style.display='block'; this.e.hud.innerText=`XOX (${['KOLAY','ORTA','ZOR'][this.d]}) - (A) Koy`;
-    }
-    cw(b) {
-        const w = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-        for(let l of w) if(b[l[0]] && b[l[0]]===b[l[1]] && b[l[0]]===b[l[2]]) return b[l[0]];
-        if(!b.includes(0)) return 3; return 0;
-    }
-    minimax(b, d, max) {
-        let r=this.cw(b); if(r===2)return 10-d; if(r===1)return d-10; if(r===3)return 0;
-        let best = max ? -999 : 999;
-        for(let i=0;i<9;i++) {
-            if(b[i]===0) {
-                b[i] = max?2:1; let v = this.minimax(b, d+1, !max); b[i]=0;
-                best = max ? Math.max(best,v) : Math.min(best,v);
-            }
-        }
-        return best;
-    }
+    constructor(eng, diff) { this.e=eng; this.d = diff || 0; this.b = [0,0,0, 0,0,0, 0,0,0]; this.c=0; this.t=1; this.go=false; this.e.hud.style.display='block'; this.e.hud.innerText=`XOX (${['KOLAY','ORTA','ZOR'][this.d]}) - (A) Koy`; }
+    cw(b) { const w = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]]; for(let l of w) if(b[l[0]] && b[l[0]]===b[l[1]] && b[l[0]]===b[l[2]]) return b[l[0]]; if(!b.includes(0)) return 3; return 0; }
+    minimax(b, d, max) { let r=this.cw(b); if(r===2)return 10-d; if(r===1)return d-10; if(r===3)return 0; let best = max ? -999 : 999; for(let i=0;i<9;i++) { if(b[i]===0) { b[i] = max?2:1; let v = this.minimax(b, d+1, !max); b[i]=0; best = max ? Math.max(best,v) : Math.min(best,v); } } return best; }
     aiMove() {
         let bm = -1;
-        if(this.d === 0) { // Kolay (Rastgele)
-            let av=[]; for(let i=0;i<9;i++) if(this.b[i]===0) av.push(i);
-            if(av.length>0) bm = av[Math.floor(Math.random()*av.length)];
-        } else if(this.d === 1) { // Orta (%50 Minimax, %50 Rastgele)
-            if(Math.random()<0.5) { this.d=2; this.aiMove(); this.d=1; return; }
-            else { this.d=0; this.aiMove(); this.d=1; return; }
-        } else { // Zor (Yenilmez Minimax)
-            let bv = -999;
-            for(let i=0;i<9;i++) {
-                if(this.b[i]===0) {
-                    this.b[i]=2; let v = this.minimax(this.b,0,false); this.b[i]=0;
-                    if(v>bv) { bv=v; bm=i; }
-                }
-            }
-        }
+        if(this.d === 0) { let av=[]; for(let i=0;i<9;i++) if(this.b[i]===0) av.push(i); if(av.length>0) bm = av[Math.floor(Math.random()*av.length)]; } 
+        else if(this.d === 1) { if(Math.random()<0.5) { this.d=2; this.aiMove(); this.d=1; return; } else { this.d=0; this.aiMove(); this.d=1; return; } } 
+        else { let bv = -999; for(let i=0;i<9;i++) { if(this.b[i]===0) { this.b[i]=2; let v = this.minimax(this.b,0,false); this.b[i]=0; if(v>bv) { bv=v; bm=i; } } } }
         if(bm!==-1){ this.b[bm]=2; Audio.play('hit'); }
         this.t=1; this.chk();
     }
-    chk() {
-        let w=this.cw(this.b);
-        if(w) { this.go=true; this.e.hud.innerText = w===1?"KAZANDIN! (B)Cikis":w===2?"AI KAZANDI (B)Cikis":"BERABERE! (B)Cikis"; }
-    }
+    chk() { let w=this.cw(this.b); if(w) { this.go=true; if(w===2) Audio.play('die'); else Audio.play('coin'); this.e.hud.innerText = w===1?"KAZANDIN! (B)Cikis":w===2?"AI KAZANDI (B)Cikis":"BERABERE! (B)Cikis"; } }
     upd(dt) {
         if(!this.il)this.il=0; if(this.il>0)this.il-=dt;
         if(this.go) { if(Input.keys.b)this.e.openMenu(); return; }
         if(this.t===1 && this.il<=0) {
-            if(Input.keys.right){ this.c=(this.c%3===2)?this.c-2:this.c+1; this.il=0.2; }
-            if(Input.keys.left){ this.c=(this.c%3===0)?this.c+2:this.c-1; this.il=0.2; }
-            if(Input.keys.down){ this.c=(this.c+3)%9; this.il=0.2; }
-            if(Input.keys.up){ this.c=(this.c+6)%9; this.il=0.2; }
-            if(Input.keys.a && this.b[this.c]===0) {
-                this.b[this.c]=1; Audio.play('place'); this.t=2; this.chk();
-                if(!this.go) setTimeout(()=>this.aiMove(), 400); this.il=0.5;
-            }
+            if(Input.keys.right){ this.c=(this.c%3===2)?this.c-2:this.c+1; this.il=0.2; Audio.play('menu_move');}
+            if(Input.keys.left){ this.c=(this.c%3===0)?this.c+2:this.c-1; this.il=0.2; Audio.play('menu_move');}
+            if(Input.keys.down){ this.c=(this.c+3)%9; this.il=0.2; Audio.play('menu_move');}
+            if(Input.keys.up){ this.c=(this.c+6)%9; this.il=0.2; Audio.play('menu_move');}
+            if(Input.keys.a && this.b[this.c]===0) { this.b[this.c]=1; Audio.play('place'); this.t=2; this.chk(); if(!this.go) setTimeout(()=>this.aiMove(), 400); this.il=0.5; }
         }
     }
     rnd(x) {
-        x.fillStyle='#9bbc0f'; x.fillRect(0,0,160,144); x.fillStyle='#0f380f';
-        x.fillRect(52,10,2,124); x.fillRect(106,10,2,124); x.fillRect(10,52,140,2); x.fillRect(10,94,140,2);
+        x.fillStyle='#9bbc0f'; x.fillRect(0,0,160,144); x.fillStyle='#0f380f'; x.fillRect(52,10,2,124); x.fillRect(106,10,2,124); x.fillRect(10,52,140,2); x.fillRect(10,94,140,2);
         for(let i=0;i<9;i++) {
             let px=10+(i%3)*54, py=10+Math.floor(i/3)*42;
             if(this.c===i && this.t===1 && !this.go) { x.fillStyle='rgba(15,56,15,0.2)'; x.fillRect(px+2,py+2,48,38); }
@@ -653,67 +655,47 @@ class G_XOX {
     }
 }
 
-/** 4. RETRO SNAKE 360 (Serbest Hareketli Yılan) */
+/** 4. RETRO SNAKE 360 */
 class G_Snake360 {
     constructor(eng){ this.e=eng; this.w=160; this.h=144; this.s=[{x:80,y:72}]; this.ang=0; this.f=this.gf(); this.sc=0; this.e.hud.style.display='block';}
     gf(){ return {x: 10+Math.random()*140, y: 10+Math.random()*124}; }
     upd(dt) {
         if(Math.abs(Input.joyL.x)>0.1 || Math.abs(Input.joyL.y)>0.1) this.ang = Math.atan2(Input.joyL.y, Input.joyL.x);
         let spd = 40*dt; let head = {x: this.s[0].x + Math.cos(this.ang)*spd, y: this.s[0].y + Math.sin(this.ang)*spd};
-        if(head.x<0||head.x>this.w||head.y<0||head.y>this.h) return this.e.openMenu(); // Duvar ölümü
+        if(head.x<0||head.x>this.w||head.y<0||head.y>this.h) { Audio.play('die'); return this.e.openMenu(); }
         this.s.unshift(head);
-        if(Math.hypot(head.x-this.f.x, head.y-this.f.y)<8) { this.sc++; Audio.play('coin'); this.f=this.gf(); }
-        else { this.s.pop(); } // Sabit uzunluk takibi için mesafe tabanlı pop gerekir ama basitlik için pop yapıyoruz, segments sıkışacak
-        // Snake 360 aralık düzeltmesi (çok hızlı segment birikimini önle)
-        let totalL = this.sc*10 + 10;
-        let len = 0;
+        if(Math.hypot(head.x-this.f.x, head.y-this.f.y)<8) { this.sc++; Audio.play('coin'); this.f=this.gf(); } else { this.s.pop(); }
+        let totalL = this.sc*10 + 10; let len = 0;
         for(let i=1; i<this.s.length; i++){ len+=Math.hypot(this.s[i].x-this.s[i-1].x, this.s[i].y-this.s[i-1].y); if(len>totalL){ this.s.splice(i); break; } }
         this.e.hud.innerText=`SNAKE 360 | SKOR: ${this.sc}`;
     }
-    rnd(x){
-        x.fillStyle='#9bbc0f'; x.fillRect(0,0,this.w,this.h); x.fillStyle='#0f380f';
-        this.s.forEach(p => { x.beginPath(); x.arc(p.x,p.y,3,0,Math.PI*2); x.fill(); });
-        x.fillRect(this.f.x-3, this.f.y-3, 6, 6);
-    }
+    rnd(x){ x.fillStyle='#9bbc0f'; x.fillRect(0,0,this.w,this.h); x.fillStyle='#0f380f'; this.s.forEach(p => { x.beginPath(); x.arc(p.x,p.y,3,0,Math.PI*2); x.fill(); }); x.fillRect(this.f.x-3, this.f.y-3, 6, 6); }
 }
 
 /** 5. PING PONG */
 class G_Pong {
     constructor(eng){ this.e=eng; this.p1=60; this.p2=60; this.bx=80; this.by=72; this.vx=-80; this.vy=50; this.s=[0,0]; this.e.hud.style.display='block'; }
     upd(dt) {
-        if(Input.keys.up || Input.joyL.y < -0.5) this.p1 -= 100*dt;
-        if(Input.keys.down || Input.joyL.y > 0.5) this.p1 += 100*dt;
+        if(Input.keys.up || Input.joyL.y < -0.5) this.p1 -= 100*dt; if(Input.keys.down || Input.joyL.y > 0.5) this.p1 += 100*dt;
         this.p1=Math.max(0,Math.min(124,this.p1));
-        if(this.by > this.p2+10) this.p2 += 70*dt; if(this.by < this.p2+10) this.p2 -= 70*dt; // AI
+        if(this.by > this.p2+10) this.p2 += 70*dt; if(this.by < this.p2+10) this.p2 -= 70*dt; 
         this.bx+=this.vx*dt; this.by+=this.vy*dt;
         if(this.by<=0||this.by>=140){ this.vy*=-1; Audio.play('hit'); }
         if(this.bx<=10 && this.by>this.p1-5 && this.by<this.p1+25){ this.vx*=-1.1; this.bx=10; Audio.play('shoot'); }
         if(this.bx>=146 && this.by>this.p2-5 && this.by<this.p2+25){ this.vx*=-1; this.bx=146; Audio.play('shoot'); }
-        if(this.bx<0){ this.s[1]++; this.rst(); } if(this.bx>160){ this.s[0]++; this.rst(); }
+        if(this.bx<0){ this.s[1]++; Audio.play('die'); this.rst(); } if(this.bx>160){ this.s[0]++; Audio.play('coin'); this.rst(); }
+        if(this.s[0]>5 || this.s[1]>5) { return this.e.openMenu(); }
         this.e.hud.innerText=`SEN: ${this.s[0]} - AI: ${this.s[1]}`;
     }
-    rst() { this.bx=80; this.by=72; this.vx=this.vx>0?-80:80; this.vy=50; Audio.play('coin'); }
-    rnd(x) {
-        x.fillStyle='#111'; x.fillRect(0,0,160,144); x.fillStyle='#fff';
-        x.fillRect(5,this.p1,4,20); x.fillRect(151,this.p2,4,20); x.fillRect(this.bx,this.by,4,4);
-        for(let i=0;i<144;i+=10) x.fillRect(79,i,2,5);
-    }
+    rst() { this.bx=80; this.by=72; this.vx=this.vx>0?-80:80; this.vy=50; }
+    rnd(x) { x.fillStyle='#111'; x.fillRect(0,0,160,144); x.fillStyle='#fff'; x.fillRect(5,this.p1,4,20); x.fillRect(151,this.p2,4,20); x.fillRect(this.bx,this.by,4,4); for(let i=0;i<144;i+=10) x.fillRect(79,i,2,5); }
 }
 
-/** 6. TETRIS POCKET (Kompakt versiyon) */
+/** 6. TETRIS POCKET */
 class G_Tetris {
-    constructor(eng){ this.e=eng; this.g=[]; for(let i=0;i<20;i++)this.g.push(new Array(10).fill(0)); 
-    this.pcs=[ [[1,1,1,1]], [[1,1],[1,1]], [[0,1,0],[1,1,1]], [[1,0,0],[1,1,1]], [[0,0,1],[1,1,1]], [[1,1,0],[0,1,1]], [[0,1,1],[1,1,0]] ];
-    this.pc=null; this.x=3; this.y=0; this.tt=0; this.sc=0; this.spawn(); this.e.hud.style.display='block'; this.ic=0;}
-    spawn() { this.pc = this.pcs[Math.floor(Math.random()*this.pcs.length)]; this.x=3; this.y=0; if(this.coll(0,0,this.pc)) this.e.openMenu(); }
-    coll(dx,dy,p) {
-        for(let r=0;r<p.length;r++) for(let c=0;c<p[r].length;c++) {
-            if(p[r][c]) {
-                let nx=this.x+c+dx, ny=this.y+r+dy;
-                if(nx<0||nx>=10||ny>=20||(ny>=0 && this.g[ny][nx])) return true;
-            }
-        } return false;
-    }
+    constructor(eng){ this.e=eng; this.g=[]; for(let i=0;i<20;i++)this.g.push(new Array(10).fill(0)); this.pcs=[ [[1,1,1,1]], [[1,1],[1,1]], [[0,1,0],[1,1,1]], [[1,0,0],[1,1,1]], [[0,0,1],[1,1,1]], [[1,1,0],[0,1,1]], [[0,1,1],[1,1,0]] ]; this.pc=null; this.x=3; this.y=0; this.tt=0; this.sc=0; this.spawn(); this.e.hud.style.display='block'; this.ic=0;}
+    spawn() { this.pc = this.pcs[Math.floor(Math.random()*this.pcs.length)]; this.x=3; this.y=0; if(this.coll(0,0,this.pc)) { Audio.play('die'); this.e.openMenu(); } }
+    coll(dx,dy,p) { for(let r=0;r<p.length;r++) for(let c=0;c<p[r].length;c++) { if(p[r][c]) { let nx=this.x+c+dx, ny=this.y+r+dy; if(nx<0||nx>=10||ny>=20||(ny>=0 && this.g[ny][nx])) return true; } } return false; }
     rot() { let np=[]; for(let c=0;c<this.pc[0].length;c++){ np[c]=[]; for(let r=this.pc.length-1;r>=0;r--) np[c].push(this.pc[r][c]); } return np; }
     upd(dt) {
         this.tt+=dt; this.ic-=dt;
@@ -721,7 +703,7 @@ class G_Tetris {
             if(Input.keys.left && !this.coll(-1,0,this.pc)){ this.x--; this.ic=0.15; Audio.play('hit');}
             if(Input.keys.right && !this.coll(1,0,this.pc)){ this.x++; this.ic=0.15; Audio.play('hit');}
             if(Input.keys.a) { let np=this.rot(); if(!this.coll(0,0,np)){ this.pc=np; this.ic=0.2; Audio.play('place');} }
-            if(Input.keys.down) { this.tt=1; this.ic=0.1;} // soft drop
+            if(Input.keys.down) { this.tt=1; this.ic=0.1;}
         }
         if(this.tt>0.5) {
             this.tt=0;
@@ -729,151 +711,87 @@ class G_Tetris {
             else {
                 for(let r=0;r<this.pc.length;r++) for(let c=0;c<this.pc[r].length;c++) if(this.pc[r][c]) this.g[this.y+r][this.x+c]=1;
                 Audio.play('break');
-                // clear lines
-                for(let r=19;r>=0;r--) {
-                    if(this.g[r].every(v=>v===1)) { this.g.splice(r,1); this.g.unshift(new Array(10).fill(0)); this.sc+=10; r++; Audio.play('coin');}
-                }
+                for(let r=19;r>=0;r--) { if(this.g[r].every(v=>v===1)) { this.g.splice(r,1); this.g.unshift(new Array(10).fill(0)); this.sc+=10; r++; Audio.play('coin');} }
                 this.spawn();
             }
         }
         this.e.hud.innerText=`TETRIS | SKOR: ${this.sc}`;
     }
-    rnd(x) {
-        x.fillStyle='#9bbc0f'; x.fillRect(0,0,160,144); x.fillStyle='#0f380f';
-        let ox=50, oy=2; x.strokeRect(ox-1, oy-1, 62, 122);
-        for(let r=0;r<20;r++) for(let c=0;c<10;c++) if(this.g[r][c]) x.fillRect(ox+c*6, oy+r*6, 5, 5);
-        for(let r=0;r<this.pc.length;r++) for(let c=0;c<this.pc[r].length;c++) if(this.pc[r][c]) x.fillRect(ox+(this.x+c)*6, oy+(this.y+r)*6, 5, 5);
-    }
+    rnd(x) { x.fillStyle='#9bbc0f'; x.fillRect(0,0,160,144); x.fillStyle='#0f380f'; let ox=50, oy=2; x.strokeRect(ox-1, oy-1, 62, 122); for(let r=0;r<20;r++) for(let c=0;c<10;c++) if(this.g[r][c]) x.fillRect(ox+c*6, oy+r*6, 5, 5); for(let r=0;r<this.pc.length;r++) for(let c=0;c<this.pc[r].length;c++) if(this.pc[r][c]) x.fillRect(ox+(this.x+c)*6, oy+(this.y+r)*6, 5, 5); }
 }
 
 /** 7. BRICK BUSTER (Tuğla Kırma) */
 class G_Brick {
-    constructor(eng){ this.e=eng; this.px=60; this.bx=80; this.by=100; this.vx=70; this.vy=-70; this.br=[]; 
-    for(let r=0;r<5;r++)for(let c=0;c<8;c++)this.br.push({x:c*20,y:10+r*10, a:true}); this.e.hud.style.display='block';}
+    constructor(eng){ this.e=eng; this.px=60; this.bx=80; this.by=100; this.vx=70; this.vy=-70; this.br=[]; for(let r=0;r<5;r++)for(let c=0;c<8;c++)this.br.push({x:c*20,y:10+r*10, a:true}); this.e.hud.style.display='block';}
     upd(dt){
-        if(Input.keys.left || Input.joyL.x < -0.2) this.px -= 120*dt;
-        if(Input.keys.right || Input.joyL.x > 0.2) this.px += 120*dt;
-        this.px=Math.max(0,Math.min(130,this.px));
-        this.bx+=this.vx*dt; this.by+=this.vy*dt;
+        if(Input.keys.left || Input.joyL.x < -0.2) this.px -= 120*dt; if(Input.keys.right || Input.joyL.x > 0.2) this.px += 120*dt;
+        this.px=Math.max(0,Math.min(130,this.px)); this.bx+=this.vx*dt; this.by+=this.vy*dt;
         if(this.bx<=0 || this.bx>=156) { this.vx*=-1; Audio.play('hit'); }
         if(this.by<=0) { this.vy*=-1; Audio.play('hit'); }
-        if(this.by>=144) return this.e.openMenu(); // Lose
+        if(this.by>=144) { Audio.play('die'); return this.e.openMenu(); }
         if(this.by>=130 && this.by<=135 && this.bx>=this.px && this.bx<=this.px+30) { this.vy*=-1.1; this.vx = (this.bx-(this.px+15))*5; Audio.play('jump');}
-        
-        this.br.forEach(b=>{
-            if(b.a && this.bx>=b.x && this.bx<=b.x+18 && this.by>=b.y && this.by<=b.y+8) { b.a=false; this.vy*=-1; Audio.play('break'); }
-        });
+        this.br.forEach(b=>{ if(b.a && this.bx>=b.x && this.bx<=b.x+18 && this.by>=b.y && this.by<=b.y+8) { b.a=false; this.vy*=-1; Audio.play('break'); } });
         this.e.hud.innerText = `BRICK BUSTER | KALAN: ${this.br.filter(b=>b.a).length}`;
     }
-    rnd(x){
-        x.fillStyle='#222'; x.fillRect(0,0,160,144); x.fillStyle='#fff';
-        x.fillRect(this.px, 134, 30, 4); x.fillRect(this.bx, this.by, 4, 4);
-        this.br.forEach(b=>{ if(b.a) { x.fillStyle='#f55'; x.fillRect(b.x+1,b.y+1,18,8); } });
-    }
+    rnd(x){ x.fillStyle='#222'; x.fillRect(0,0,160,144); x.fillStyle='#fff'; x.fillRect(this.px, 134, 30, 4); x.fillRect(this.bx, this.by, 4, 4); this.br.forEach(b=>{ if(b.a) { x.fillStyle='#f55'; x.fillRect(b.x+1,b.y+1,18,8); } }); }
 }
 
-/** 8. TWIN STRIKE (Çift Joystick Uzay Savaşı) */
+/** 8. TWIN STRIKE */
 class G_TwinStrike {
     constructor(e){ this.e=e; this.p={x:80,y:72}; this.b=[]; this.en=[]; this.sc=0; this.sp=0; this.fc=0; e.hud.style.display='block';}
     upd(dt){
         this.p.x += Input.joyL.x*80*dt; this.p.y += Input.joyL.y*80*dt;
         this.p.x=Math.max(0,Math.min(160,this.p.x)); this.p.y=Math.max(0,Math.min(144,this.p.y));
-        
         if(this.fc>0) this.fc-=dt;
-        if((Math.abs(Input.joyR.x)>0.2 || Math.abs(Input.joyR.y)>0.2) && this.fc<=0) {
-            this.b.push({x:this.p.x,y:this.p.y, vx:Input.joyR.x*200, vy:Input.joyR.y*200}); this.fc=0.15; Audio.play('shoot');
-        }
-        
+        if((Math.abs(Input.joyR.x)>0.2 || Math.abs(Input.joyR.y)>0.2) && this.fc<=0) { this.b.push({x:this.p.x,y:this.p.y, vx:Input.joyR.x*200, vy:Input.joyR.y*200}); this.fc=0.15; Audio.play('shoot'); }
         this.sp-=dt; if(this.sp<=0){ this.en.push({x:Math.random()<0.5?0:160, y:Math.random()*144}); this.sp=1; }
-        
         for(let i=this.b.length-1;i>=0;i--){
             this.b[i].x+=this.b[i].vx*dt; this.b[i].y+=this.b[i].vy*dt;
             if(this.b[i].x<0||this.b[i].x>160||this.b[i].y<0||this.b[i].y>144) { this.b.splice(i,1); continue; }
-            for(let j=this.en.length-1;j>=0;j--) {
-                if(Math.hypot(this.b[i].x-this.en[j].x, this.b[i].y-this.en[j].y)<8) { this.b.splice(i,1); this.en.splice(j,1); this.sc+=10; Audio.play('break'); break; }
-            }
+            for(let j=this.en.length-1;j>=0;j--) { if(Math.hypot(this.b[i].x-this.en[j].x, this.b[i].y-this.en[j].y)<8) { this.b.splice(i,1); this.en.splice(j,1); this.sc+=10; Audio.play('break'); break; } }
         }
-        
-        this.en.forEach(e=>{
-            let a = Math.atan2(this.p.y-e.y, this.p.x-e.x);
-            e.x += Math.cos(a)*30*dt; e.y += Math.sin(a)*30*dt;
-            if(Math.hypot(this.p.x-e.x, this.p.y-e.y)<5) return this.e.openMenu(); // Lose
-        });
+        for(let e of this.en) {
+            let a = Math.atan2(this.p.y-e.y, this.p.x-e.x); e.x += Math.cos(a)*30*dt; e.y += Math.sin(a)*30*dt;
+            if(Math.hypot(this.p.x-e.x, this.p.y-e.y)<5) { Audio.play('die'); return this.e.openMenu(); }
+        }
         this.e.hud.innerText = `TWIN STRIKE | SKOR: ${this.sc}`;
     }
-    rnd(x){
-        x.fillStyle='#001133'; x.fillRect(0,0,160,144);
-        x.fillStyle='#0ff'; x.beginPath(); x.arc(this.p.x,this.p.y,4,0,Math.PI*2); x.fill();
-        x.fillStyle='#ff0'; this.b.forEach(b=> x.fillRect(b.x-1,b.y-1,2,2));
-        x.fillStyle='#f00'; this.en.forEach(e=> { x.beginPath(); x.arc(e.x,e.y,4,0,Math.PI*2); x.fill(); });
-    }
+    rnd(x){ x.fillStyle='#001133'; x.fillRect(0,0,160,144); x.fillStyle='#0ff'; x.beginPath(); x.arc(this.p.x,this.p.y,4,0,Math.PI*2); x.fill(); x.fillStyle='#ff0'; this.b.forEach(b=> x.fillRect(b.x-1,b.y-1,2,2)); x.fillStyle='#f00'; this.en.forEach(e=> { x.beginPath(); x.arc(e.x,e.y,4,0,Math.PI*2); x.fill(); }); }
 }
 
-/** 9. JUMP KING MINI (Şarjlı Zıplama) */
+/** 9. JUMP KING MINI */
 class G_JumpKing {
     constructor(e){ this.e=e; this.p={x:80,y:130,vx:0,vy:0,cg:0,og:true}; this.pl=[{x:0,y:140,w:160},{x:60,y:110,w:40},{x:20,y:80,w:40},{x:100,y:50,w:40}]; e.hud.style.display='block'; this.maxH=0;}
     upd(dt){
         if(this.p.og) {
             this.p.vx = 0;
             if(Input.keys.a) { this.p.cg += dt*40; this.p.cg=Math.min(this.p.cg, 300); }
-            else if(this.p.cg>0) {
-                this.p.vy = -this.p.cg; this.p.vx = (Input.keys.right-Input.keys.left)*60 || Input.joyL.x*60;
-                this.p.cg=0; this.p.og=false; Audio.play('jump');
-            }
+            else if(this.p.cg>0) { this.p.vy = -this.p.cg; this.p.vx = (Input.keys.right-Input.keys.left)*60 || Input.joyL.x*60; this.p.cg=0; this.p.og=false; Audio.play('jump'); }
         } else {
-            this.p.vy += 300*dt; // Gravity
-            this.p.x += this.p.vx*dt; this.p.y += this.p.vy*dt;
-            if(this.p.x<0){ this.p.x=0; this.p.vx*=-1; } if(this.p.x>150){ this.p.x=150; this.p.vx*=-1; }
-            
-            // Platform collision (Falling only)
-            if(this.p.vy>0) {
-                this.pl.forEach(pl=>{
-                    if(this.p.y>pl.y-10 && this.p.y<pl.y && this.p.x>pl.x-5 && this.p.x<pl.x+pl.w) {
-                        this.p.y=pl.y-10; this.p.vy=0; this.p.og=true; Audio.play('hit');
-                    }
-                });
-            }
+            this.p.vy += 300*dt; this.p.x += this.p.vx*dt; this.p.y += this.p.vy*dt;
+            if(this.p.x<0){ this.p.x=0; this.p.vx*=-1; Audio.play('hit'); } if(this.p.x>150){ this.p.x=150; this.p.vx*=-1; Audio.play('hit'); }
+            if(this.p.vy>0) { this.pl.forEach(pl=>{ if(this.p.y>pl.y-10 && this.p.y<pl.y && this.p.x>pl.x-5 && this.p.x<pl.x+pl.w) { this.p.y=pl.y-10; this.p.vy=0; this.p.og=true; Audio.play('hit'); } }); }
         }
-        
-        if(this.p.y < 72) { // Scroll up
-            let d = 72 - this.p.y; this.p.y = 72; this.maxH+=d;
-            this.pl.forEach(pl=>pl.y+=d);
-            if(this.pl[this.pl.length-1].y > 30) this.pl.push({x:Math.random()*120, y:this.pl[this.pl.length-1].y-40, w:30+Math.random()*20});
-        }
-        if(this.p.y > 144) return this.e.openMenu(); // Lose
+        if(this.p.y < 72) { let d = 72 - this.p.y; this.p.y = 72; this.maxH+=d; this.pl.forEach(pl=>pl.y+=d); if(this.pl[this.pl.length-1].y > 30) this.pl.push({x:Math.random()*120, y:this.pl[this.pl.length-1].y-40, w:30+Math.random()*20}); }
+        if(this.p.y > 144) { Audio.play('die'); return this.e.openMenu(); }
         this.e.hud.innerText = `JUMP KING | YUKSEKLIK: ${Math.floor(this.maxH)}`;
     }
-    rnd(x){
-        x.fillStyle='#55aaff'; x.fillRect(0,0,160,144);
-        x.fillStyle='#333'; this.pl.forEach(pl=>x.fillRect(pl.x,pl.y,pl.w,5));
-        x.fillStyle='#fff'; x.fillRect(this.p.x,this.p.y,10,10);
-        if(this.p.cg>0) { x.fillStyle='red'; x.fillRect(this.p.x, this.p.y-5, (this.p.cg/300)*10, 3); }
-    }
+    rnd(x){ x.fillStyle='#55aaff'; x.fillRect(0,0,160,144); x.fillStyle='#333'; this.pl.forEach(pl=>x.fillRect(pl.x,pl.y,pl.w,5)); x.fillStyle='#fff'; x.fillRect(this.p.x,this.p.y,10,10); if(this.p.cg>0) { x.fillStyle='red'; x.fillRect(this.p.x, this.p.y-5, (this.p.cg/300)*10, 3); } }
 }
 
-/** 10. MICRO-WARIO (Mini görevler) */
+/** 10. MICRO-WARIO */
 class G_Wario {
     constructor(e){ this.e=e; this.sc=0; this.nt(); e.hud.style.display='block';}
     nt() { this.st = Math.floor(Math.random()*3); this.tm = 3; this.won=false; Audio.play('coin'); }
     upd(dt) {
         this.tm-=dt;
-        if(this.tm<=0) { if(this.won){ this.sc++; this.nt(); } else return this.e.openMenu(); }
-        
-        if(this.st===0) { // Sola bas
-            if(Input.keys.left || Input.joyL.x < -0.5) this.won=true;
-        } else if(this.st===1) { // A'ya bas
-            if(Input.keys.a) this.won=true;
-        } else if(this.st===2) { // Hareketsiz kal
-            if(Math.abs(Input.joyL.x)>0 || Input.keys.a || Input.keys.b || Input.keys.left) this.won=false; else this.won=true;
-        }
+        if(this.tm<=0) { if(this.won){ this.sc++; this.nt(); } else { Audio.play('die'); return this.e.openMenu(); } }
+        if(this.st===0) { if(Input.keys.left || Input.joyL.x < -0.5) this.won=true; } 
+        else if(this.st===1) { if(Input.keys.a) this.won=true; } 
+        else if(this.st===2) { if(Math.abs(Input.joyL.x)>0 || Input.keys.a || Input.keys.b || Input.keys.left) this.won=false; else this.won=true; }
         this.e.hud.innerText = `MICRO-WARIO | SKOR: ${this.sc} | SURE: ${this.tm.toFixed(1)}`;
     }
-    rnd(x) {
-        x.fillStyle = this.won ? '#5f5' : '#f55'; x.fillRect(0,0,160,144);
-        x.fillStyle='#000'; x.font='10px sans-serif';
-        let t = this.st===0 ? "SOLA BAS!" : this.st===1 ? "A'YA BAS!" : "HICBIR SEY YAPMA!";
-        x.fillText(t, 20, 72);
-    }
+    rnd(x) { x.fillStyle = this.won ? '#5f5' : '#f55'; x.fillRect(0,0,160,144); x.fillStyle='#000'; x.font='10px sans-serif'; x.fillText(this.st===0 ? "SOLA BAS!" : this.st===1 ? "A'YA BAS!" : "HICBIR SEY YAPMA!", 20, 72); }
 }
 
 // BAŞLAT
