@@ -1,9 +1,9 @@
-<!DOCTYPE html> 
-<html lang="tr"> 
+<!DOCTYPE html>
+<html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>RETRO BOY (RB-90) - 10 OYUNLU TAM SURUM</title>
+    <title>RETRO BOY (RB-90) - 11 OYUNLU TAM SURUM</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
@@ -85,7 +85,7 @@
             <div id="hud">HP: 100</div>
             
             <div id="menu-overlay">
-                <div class="menu-title">RB-90 | 10-IN-1</div>
+                <div class="menu-title">RB-90 | 11-IN-1</div>
                 <div class="game-list" id="game-list"></div>
                 <div style="font-size: 7px; text-align: center; margin-top:2px; color:#5c7a5c;">(A)Sec | (Y)Zıpla | (Menü)Çık</div>
             </div>
@@ -247,13 +247,14 @@ const Engine = {
             {n:"1. MINE-CRAFT 2010 (3D)", c:G_Minecraft},
             {n:"2. CHRONO QUEST (RPG)", c:G_RPG},
             {n:"3. XOX (AI Zeka)", c:G_XOX},
-            {n:"4. RETRO SNAKE 360", c:G_Snake360},
+            {n:"4. CLASSIC SNAKE", c:G_ClassicSnake},
             {n:"5. PING PONG", c:G_Pong},
             {n:"6. TETRIS POCKET", c:G_Tetris},
             {n:"7. BRICK BUSTER", c:G_Brick},
             {n:"8. TWIN STRIKE", c:G_TwinStrike},
             {n:"9. JUMP KING MINI", c:G_JumpKing},
-            {n:"10. MICRO-WARIO", c:G_Wario}
+            {n:"10. MICRO-WARIO", c:G_Wario},
+            {n:"11. DINO RUN", c:G_Dino}
         ];
         this.drawMenu(); requestAnimationFrame(t=>this.loop(t));
     },
@@ -278,14 +279,12 @@ const Engine = {
         this.ch.style.display='none'; this.hud.style.display='none'; this.sm.style.display='none';
         this.subMode=false; 
         
-        // EKRAN TEMİZLEME BUG FIX: Menüye dönüldüğünde arka planda kalan şeffaf eski görüntüyü temizler.
+        // EKRAN TEMİZLEME BUG FIX
         this.ctx.clearRect(0, 0, this.c.width, this.c.height);
-
-        // MOBİL BUG FIX: Menüye dönünce kilitlenmeyi engellemek için tüm girdileri sıfırla
+        
         for(let k in Input.keys) Input.keys[k] = 0;
         Input.joyL.x = 0; Input.joyL.y = 0; Input.joyR.x = 0; Input.joyR.y = 0;
         
-        // Cooldown ekle ki hemen başka menüye atlamasın
         this.mCool = 0.5;
         this.drawMenu();
     },
@@ -321,8 +320,6 @@ const Engine = {
             if(Input.keys.menu) { this.openMenu(); Input.keys.menu=0; }
             else { 
                 this.active.upd(dt); 
-                // CRASH BUG FIX: Eğer upd() fonksiyonu oyuncuyu öldürüp açık menüye atarsa (this.active = null olursa),
-                // draw (rnd) fonksiyonunun boş objede çalışmaya çalışıp döngüyü dondurmasını engeller.
                 if(this.active && this.active.rnd) {
                     this.active.rnd(this.ctx); 
                 }
@@ -353,23 +350,22 @@ class G_Minecraft {
 
         this.tex = this.genTex();
         this.mats = {
-            1: new THREE.MeshLambertMaterial({map: this.tex.grass}), // Çimen
-            2: new THREE.MeshLambertMaterial({map: this.tex.dirt}),  // Toprak
-            3: new THREE.MeshLambertMaterial({map: this.tex.stone}), // Taş
-            4: new THREE.MeshLambertMaterial({map: this.tex.wood}),  // Odun
-            5: new THREE.MeshLambertMaterial({map: this.tex.leaf, transparent:true, opacity:0.9}), // Yaprak
-            6: new THREE.MeshLambertMaterial({color: 0x44aaff, transparent:true, opacity:0.6}), // Su
-            7: new THREE.MeshLambertMaterial({map: this.tex.sand}),  // Yeni: Kum
-            8: new THREE.MeshLambertMaterial({map: this.tex.planks}),// Yeni: Tahta
-            9: new THREE.MeshLambertMaterial({map: this.tex.glass, transparent:true, opacity:0.7}), // Yeni: Cam
-            10: new THREE.MeshLambertMaterial({map: this.tex.brick}) // Yeni: Tuğla
+            1: new THREE.MeshLambertMaterial({map: this.tex.grass}),
+            2: new THREE.MeshLambertMaterial({map: this.tex.dirt}),
+            3: new THREE.MeshLambertMaterial({map: this.tex.stone}),
+            4: new THREE.MeshLambertMaterial({map: this.tex.wood}),
+            5: new THREE.MeshLambertMaterial({map: this.tex.leaf, transparent:true, opacity:0.9}),
+            6: new THREE.MeshLambertMaterial({color: 0x44aaff, transparent:true, opacity:0.6}),
+            7: new THREE.MeshLambertMaterial({map: this.tex.sand}),
+            8: new THREE.MeshLambertMaterial({map: this.tex.planks}),
+            9: new THREE.MeshLambertMaterial({map: this.tex.glass, transparent:true, opacity:0.7}),
+            10: new THREE.MeshLambertMaterial({map: this.tex.brick})
         };
         this.bNames = ["", "Cimen", "Toprak", "Tas", "Odun", "Yaprak", "Su", "Kum", "Tahta", "Cam", "Tugla"];
 
         this.cs = 16; this.chunks = {}; this.geom = new THREE.BoxGeometry(1,1,1);
         this.p = { x:8, y:20, z:8, yaw:0, pitch:0, vy:0, og:false };
         
-        // Yeni Hayvan Tipleri (Koyun, İnek, Domuz, Tavuk)
         this.mobs = []; this.spawnMobs();
         
         this.rc = new THREE.Raycaster(); this.rcDown = new THREE.Raycaster(); this.cv = new THREE.Vector2(0,0);
@@ -419,7 +415,7 @@ class G_Minecraft {
                     let t = 3; 
                     if(isW && y===8) t=6; 
                     else if(!isW) { 
-                        if(y===h) t = (h<=9 && Math.random()>0.2) ? 7 : 1; // Sahillere Kum (7)
+                        if(y===h) t = (h<=9 && Math.random()>0.2) ? 7 : 1;
                         else if(y>h-3) t=2; 
                     }
                     
@@ -482,20 +478,24 @@ class G_Minecraft {
         let mvZ = (dir.z * -Input.joyL.y + rig.z * Input.joyL.x) * spd;
         this.p.x += mvX; this.p.z += mvZ;
 
-        // Ayak Sesleri
         if(this.p.og && (Math.abs(mvX)>0 || Math.abs(mvZ)>0)) {
             this.stepT -= dt; if(this.stepT<=0){ Audio.play('step'); this.stepT=0.35; }
         }
 
-        // Yerçekimi ve Doğru Zemin Algılama (Raycaster kullanarak)
+        // Yerçekimi ve Doğru Zemin Algılama 
         this.p.vy -= 18 * dt; this.p.y += this.p.vy * dt;
+        
+        // --- BOŞLUĞA DÜŞÜNCE YENİDEN DOĞMA FIX'I ---
+        if (this.p.y < -15) {
+            this.p.x = 8; this.p.y = 25; this.p.z = 8; this.p.vy = 0; Audio.play('die');
+        }
         
         let allChunks = []; for(let k in this.chunks) allChunks.push(this.chunks[k]);
         this.rcDown.set(new THREE.Vector3(this.p.x, this.p.y+0.1, this.p.z), new THREE.Vector3(0,-1,0));
         let gHits = this.rcDown.intersectObjects(allChunks, true);
         
         if(gHits.length > 0 && gHits[0].distance < 1.7 && this.p.vy <= 0) {
-            this.p.y = gHits[0].point.y + 1.6; // Göz hizası sabitlemesi
+            this.p.y = gHits[0].point.y + 1.6;
             this.p.vy = 0; this.p.og = true;
         } else {
             this.p.og = false;
@@ -507,7 +507,7 @@ class G_Minecraft {
         // Aksiyon (Blok Seçimi)
         if(this.cd>0) this.cd-=dt;
         if(Input.keys.x && this.cd<=0) { 
-            this.sel++; if(this.sel===6) this.sel=7; // Suyu geç
+            this.sel++; if(this.sel===6) this.sel=7; 
             if(this.sel>10) this.sel=1; 
             this.updateHud(); this.cd=0.3; Audio.play('menu_move');
         }
@@ -518,11 +518,10 @@ class G_Minecraft {
             let ints = this.rc.intersectObjects(allChunks, true);
             if(ints.length > 0 && ints[0].distance < 6) {
                 let hit = ints[0];
-                if(Input.keys.b && hit.object.material !== this.mats[6]) { // Su kırılamaz
+                if(Input.keys.b && hit.object.material !== this.mats[6]) { 
                     hit.object.parent.remove(hit.object); Audio.play('break');
                 } else if(Input.keys.a) {
                     let np = hit.object.position.clone().add(hit.face.normal);
-                    // BUG FIX: Blok karakterin üstüne konamaz!
                     let dToP = Math.hypot(np.x - this.p.x, np.z - this.p.z);
                     if(dToP > 0.8 || Math.abs(np.y - this.p.y) > 1.5) {
                         let nb = new THREE.Mesh(this.geom, this.mats[this.sel]); nb.position.copy(np);
@@ -533,22 +532,20 @@ class G_Minecraft {
             this.cd = 0.3;
         }
 
-        // Hayvanlar (Zıplama, Yürüme ve Ses)
+        // Hayvanlar
         this.mobs.forEach(mb => {
             mb.vy -= 15*dt; mb.m.position.y += mb.vy*dt;
             
-            // Hayvan zemin kontrolü
             this.rcDown.set(new THREE.Vector3(mb.m.position.x, mb.m.position.y+0.1, mb.m.position.z), new THREE.Vector3(0,-1,0));
             let mHits = this.rcDown.intersectObjects(allChunks, true);
             if(mHits.length > 0 && mHits[0].distance < (mb.m.geometry.parameters.height/2 + 0.1) && mb.vy <= 0) {
                 mb.m.position.y = mHits[0].point.y + mb.m.geometry.parameters.height/2;
-                mb.vy = 0; if(Math.random()<0.02) mb.vy=5; // Zıpla
+                mb.vy = 0; if(Math.random()<0.02) mb.vy=5;
             }
             
             if(Math.random()<0.05) { mb.tx=(Math.random()-0.5)*3; mb.tz=(Math.random()-0.5)*3; }
             mb.m.position.x += mb.tx*dt; mb.m.position.z += mb.tz*dt;
 
-            // Hayvan Sesleri
             mb.cd -= dt;
             if(mb.cd <= 0) {
                 let dToP = Math.hypot(this.p.x - mb.m.position.x, this.p.z - mb.m.position.z);
@@ -655,21 +652,55 @@ class G_XOX {
     }
 }
 
-/** 4. RETRO SNAKE 360 */
-class G_Snake360 {
-    constructor(eng){ this.e=eng; this.w=160; this.h=144; this.s=[{x:80,y:72}]; this.ang=0; this.f=this.gf(); this.sc=0; this.e.hud.style.display='block';}
-    gf(){ return {x: 10+Math.random()*140, y: 10+Math.random()*124}; }
-    upd(dt) {
-        if(Math.abs(Input.joyL.x)>0.1 || Math.abs(Input.joyL.y)>0.1) this.ang = Math.atan2(Input.joyL.y, Input.joyL.x);
-        let spd = 40*dt; let head = {x: this.s[0].x + Math.cos(this.ang)*spd, y: this.s[0].y + Math.sin(this.ang)*spd};
-        if(head.x<0||head.x>this.w||head.y<0||head.y>this.h) { Audio.play('die'); return this.e.openMenu(); }
-        this.s.unshift(head);
-        if(Math.hypot(head.x-this.f.x, head.y-this.f.y)<8) { this.sc++; Audio.play('coin'); this.f=this.gf(); } else { this.s.pop(); }
-        let totalL = this.sc*10 + 10; let len = 0;
-        for(let i=1; i<this.s.length; i++){ len+=Math.hypot(this.s[i].x-this.s[i-1].x, this.s[i].y-this.s[i-1].y); if(len>totalL){ this.s.splice(i); break; } }
-        this.e.hud.innerText=`SNAKE 360 | SKOR: ${this.sc}`;
+/** 4. CLASSIC SNAKE (Grid ve D-PAD destekli Klasik Yılan) */
+class G_ClassicSnake {
+    constructor(eng){ 
+        this.e=eng; this.w=20; this.h=18; this.cs=8; 
+        this.s=[{x:10,y:9}, {x:9,y:9}, {x:8,y:9}];
+        this.dir={x:1,y:0}; this.nextDir={x:1,y:0};
+        this.f=this.gf(); this.sc=0; this.tick=0;
+        this.e.hud.style.display='block';
     }
-    rnd(x){ x.fillStyle='#9bbc0f'; x.fillRect(0,0,this.w,this.h); x.fillStyle='#0f380f'; this.s.forEach(p => { x.beginPath(); x.arc(p.x,p.y,3,0,Math.PI*2); x.fill(); }); x.fillRect(this.f.x-3, this.f.y-3, 6, 6); }
+    gf(){ 
+        while(true) {
+            let fx = Math.floor(Math.random()*this.w);
+            let fy = Math.floor(Math.random()*this.h);
+            let ok = true;
+            for(let p of this.s) if(p.x===fx && p.y===fy) ok=false;
+            if(ok) return {x:fx, y:fy};
+        }
+    }
+    upd(dt) {
+        if(Input.keys.up && this.dir.y===0) this.nextDir={x:0,y:-1};
+        if(Input.keys.down && this.dir.y===0) this.nextDir={x:0,y:1};
+        if(Input.keys.left && this.dir.x===0) this.nextDir={x:-1,y:0};
+        if(Input.keys.right && this.dir.x===0) this.nextDir={x:1,y:0};
+        
+        this.tick += dt;
+        let speed = Math.max(0.05, 0.15 - (this.sc*0.002));
+        if(this.tick >= speed) {
+            this.tick = 0;
+            this.dir = this.nextDir;
+            let h = {x:this.s[0].x+this.dir.x, y:this.s[0].y+this.dir.y};
+            
+            if(h.x<0||h.x>=this.w||h.y<0||h.y>=this.h) { Audio.play('die'); return this.e.openMenu(); }
+            for(let p of this.s) if(p.x===h.x && p.y===h.y) { Audio.play('die'); return this.e.openMenu(); }
+            
+            this.s.unshift(h);
+            if(h.x===this.f.x && h.y===this.f.y) {
+                this.sc++; Audio.play('coin'); this.f=this.gf();
+            } else {
+                this.s.pop();
+            }
+        }
+        this.e.hud.innerText=`CLASSIC SNAKE | SKOR: ${this.sc}`;
+    }
+    rnd(x){ 
+        x.fillStyle='#9bbc0f'; x.fillRect(0,0,160,144); 
+        x.fillStyle='#0f380f'; 
+        this.s.forEach(p => x.fillRect(p.x*this.cs, p.y*this.cs, this.cs-1, this.cs-1)); 
+        x.fillRect(this.f.x*this.cs, this.f.y*this.cs, this.cs-1, this.cs-1); 
+    }
 }
 
 /** 5. PING PONG */
@@ -792,6 +823,82 @@ class G_Wario {
         this.e.hud.innerText = `MICRO-WARIO | SKOR: ${this.sc} | SURE: ${this.tm.toFixed(1)}`;
     }
     rnd(x) { x.fillStyle = this.won ? '#5f5' : '#f55'; x.fillRect(0,0,160,144); x.fillStyle='#000'; x.font='10px sans-serif'; x.fillText(this.st===0 ? "SOLA BAS!" : this.st===1 ? "A'YA BAS!" : "HICBIR SEY YAPMA!", 20, 72); }
+}
+
+/** 11. DINO RUN (Mükemmelleştirilmiş Fizikler) */
+class G_Dino {
+    constructor(eng) {
+        this.e = eng; this.p = {y:110, vy:0, og:true}; this.obs = []; 
+        this.sc = 0; this.sp = 0; this.e.hud.style.display = 'block';
+    }
+    upd(dt) {
+        this.sc += dt*10;
+        
+        // Zıplama: Daha yüksek zıplama gücü eklendi (-260)
+        if(this.p.og && (Input.keys.a || Input.keys.up || Input.keys.y || Input.keys.x || Input.keys.b || Input.joyL.y < -0.5)) {
+            this.p.vy = -260; 
+            this.p.og = false; 
+            Audio.play('jump');
+            Input.keys.a = Input.keys.up = Input.keys.y = Input.keys.x = Input.keys.b = 0;
+        }
+        
+        // Yerçekimi & Hızlı Düşüş
+        if(!this.p.og) {
+            // Eğer havadayken aşağı basılırsa (veya joystick aşağı çekilirse) çok hızlı yere düşer
+            let gravity = (Input.keys.down || Input.joyL.y > 0.5) ? 1800 : 900;
+            this.p.vy += gravity * dt; 
+            this.p.y += this.p.vy * dt;
+            
+            // Yere Temas
+            if(this.p.y >= 110) { 
+                this.p.y = 110; 
+                this.p.vy = 0; 
+                this.p.og = true; 
+            }
+        }
+        
+        // Hız Yönetimi: Adaletli bir hız artışı
+        let speed = 90 + Math.min(60, this.sc / 5); 
+        
+        // Engel Oluşturma
+        this.sp -= dt;
+        if(this.sp <= 0) {
+            // Kaktüs boyutları daraltıldı ve mantıklı hale getirildi
+            this.obs.push({x: 160, w: 8 + Math.random()*4, h: 10 + Math.random()*10});
+            // Engeller arası mesafe açıldı ki oyuncu rahatça zıplama fırsatı bulsun
+            this.sp = (0.8 + Math.random()*1.0) * (100/speed) + 0.3;
+        }
+        
+        // Çarpışma Hesaplaması (Daha Affedici Hitboxlar)
+        for(let i=this.obs.length-1; i>=0; i--) {
+            let o = this.obs[i]; 
+            o.x -= speed*dt;
+            if(o.x + o.w < 0) { this.obs.splice(i,1); continue; }
+            
+            // Hitboxları, çizilen karelerden 2-3 piksel içerde olacak şekilde hesapladık (Adalet için)
+            let px = 22, py = this.p.y + 2, pw = 8, ph = 11; 
+            let ox = o.x + 2, oy = 125 - o.h + 2, ow = o.w - 4, oh = o.h - 2;
+            
+            if (px < ox + ow && px + pw > ox && py < oy + oh && py + ph > oy) {
+                Audio.play('die'); return this.e.openMenu();
+            }
+        }
+        this.e.hud.innerText = `DINO RUN | SKOR: ${Math.floor(this.sc)}`;
+    }
+    rnd(x) {
+        x.fillStyle='#e3cf9a'; x.fillRect(0,0,160,144);
+        x.fillStyle='#5c3a21'; x.fillRect(0,125,160,2);
+        
+        // Dinozor Çizimi (Görsel boyutları aynı ama hitbox'ı daha küçük)
+        x.fillStyle='#333';
+        x.fillRect(20, this.p.y, 12, 15);
+        
+        // Kaktüs Çizimi
+        x.fillStyle='#226611';
+        this.obs.forEach(o => {
+            x.fillRect(o.x, 125 - o.h, o.w, o.h);
+        });
+    }
 }
 
 // BAŞLAT
